@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dates</title>
+</head>
+<body>
+  <h1>Выборка по датам</h1>
+  <form action="/dates" method="GET">
+    <label for="start_date">Начальная дата:</label>
+    <input type="date" id="start_date" name="start_date" required>
+    <br>
+    <label for="end_date">Конечная дата:</label>
+    <input type="date" id="end_date" name="end_date">
+    <br>
+    <input type="submit" value="Посмотреть даты">
+  </form>
+
+  {% if dates %}
+    <h2>Выбранные даты:</h2>
+    <ul>
+      {% for date in dates %}
+        <li>{{ date }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    {% if start_date %}
+      <p>Дат в данном промежутке не обнаружено</p>
+    {% endif %}
+  {% endif %}
+</body>
+</html>

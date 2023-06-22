@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View All Records</title>
+</head>
+<body>
+    <h2>View All Records</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>IP Address</th>
+                <th>Date</th>
+                <th>request_method</th>
+                <th>url</th>
+                <th>http_version</th>
+                <th>status_code</th>
+                <th>response_size</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.ip_address }}</td>
+                <td>{{ record.date }}</td>
+                <td>{{ record.request_method }}</td>
+                <td>{{ record.url }}</td>
+                <td>{{ record.http_version }}</td>
+                <td>{{ record.status_code }}</td>
+                <td>{{ record.response_size }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

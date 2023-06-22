@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IP Addresses</title>
+</head>
+<body>
+  <h1>Выборка по IP-адресам</h1>
+  <ul>
+    {% for ip_address in ip_addresses %}
+      <li>{{ ip_address }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
