@@ -63,6 +63,31 @@ def view_dates():
         cur.close()
 
 
+
+@app.route('/view-all', methods=['GET'])
+def view_all():
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM access_logs")
+    rows = cur.fetchall()
+
+    # Создание списка словарей для хранения результатов
+    data = []
+    for row in rows:
+        item = {
+            'ip_address': row[1],
+            'date': row[2],
+            'request_method': row[3],
+            'url': row[4],
+            'http_version': row[5],
+            'status_code': row[6],
+            'response_size': row[7],
+            # Добавьте другие поля, если есть
+        }
+        data.append(item)
+
+    return render_template('view_all.html', records=data)
+
+
 @app.route('/api/ip-addresses', methods=['GET'])
 def get_all_ip_addresses():
     cur = conn.cursor()
@@ -97,29 +122,6 @@ def get_dates():
     finally:
         cur.close()
 
-
-@app.route('/view-all', methods=['GET'])
-def view_all():
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM access_logs")
-    rows = cur.fetchall()
-
-    # Создание списка словарей для хранения результатов
-    data = []
-    for row in rows:
-        item = {
-            'ip_address': row[1],
-            'date': row[2],
-            'request_method': row[3],
-            'url': row[4],
-            'http_version': row[5],
-            'status_code': row[6],
-            'response_size': row[7],
-            # Добавьте другие поля, если есть
-        }
-        data.append(item)
-
-    return render_template('view_all.html', records=data)
 
 
 if __name__ == '__main__':
