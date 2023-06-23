@@ -1,53 +1,87 @@
 import requests
 import json
+import tkinter as tk
+from tkinter import filedialog, messagebox
 
-while True:
-    print("Выберите действие:")
-    print("1. Получить все IP-адреса и сохранить в файл")
-    print("2. Получить даты в заданном временном промежутке и сохранить в файл")
-    print("3. Выход")
-
-    choice = input("Введите номер действия: ")
-
-    if choice == "1":
-        path_to_save = input("Введите путь, куда вы хотите сохранить информацию: ")
-        response = requests.get('http://127.0.0.1:5000/api/ip-addresses')
-        if response.status_code == 200:
-            data = response.json()
+def get_all_ip_addresses():
+    response = requests.get('http://127.0.0.1:5000/api/ip-addresses')
+    if response.status_code == 200:
+        data = response.json()
+        path_to_save = filedialog.asksaveasfilename(defaultextension=".json")
+        if path_to_save:
             try:
                 with open(path_to_save, 'w') as file:
                     json.dump(data, file)
-                print(f"Данные успешно сохранены в {path_to_save}!")
+                messagebox.showinfo("Успех", f"Данные успешно сохранены в {path_to_save}!")
             except Exception as e:
-                print("Ошибка при сохранении данных:", str(e))
+                messagebox.showerror("Ошибка", f"Ошибка при сохранении данных: {str(e)}")
         else:
-            print('Ошибка при выполнении запроса:', response.status_code)
+            messagebox.showinfo("Информация", "Операция отменена.")
+    else:
+        messagebox.showerror("Ошибка", f"Ошибка при выполнении запроса: {response.status_code}")
 
-    elif choice == "2":
-        start_date = input("Введите начальную дату в формате ГГГГ-ММ-ДД: ")
-        end_date = input("Введите конечную дату в формате ГГГГ-ММ-ДД (необязательно): ")
-        file_path = input("Введите путь для сохранения файла: ")
+def open_date_range_form():
+    date_range_form = tk.Toplevel(root)
+    date_range_form.title("Выбор дат")
 
-        url = 'http://127.0.0.1:5000/api/dates?start_date=' + start_date
+    start_date_label = tk.Label(date_range_form, text="Начальная дата(ГГГГ-ММ-ДД):")
+    start_date_label.pack()
+    start_date_entry = tk.Entry(date_range_form)
+    start_date_entry.pack()
 
-        if end_date:
-            url += '&end_date=' + end_date
+    end_date_label = tk.Label(date_range_form, text="Конечная дата (необязательно):")
+    end_date_label.pack()
+    end_date_entry = tk.Entry(date_range_form)
+    end_date_entry.pack()
 
-        response = requests.get(url)
+    save_button = tk.Button(date_range_form, text="Сохранить", command=lambda: get_dates_in_range(date_range_form, start_date_entry.get(), end_date_entry.get()))
+    save_button.pack()
 
-        if response.status_code == 200:
-            data = response.json()
+def get_dates_in_range(date_range_form, start_date, end_date):
+    date_range_form.destroy()
+
+    file_path = filedialog.asksaveasfilename(defaultextension=".json")
+
+    url = 'http://127.0.0.1:5000/api/dates?start_date=' + start_date
+
+    if end_date:
+        url += '&end_date=' + end_date
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        if file_path:
             try:
                 with open(file_path, 'w') as file:
                     json.dump(data, file)
-                print("Данные успешно сохранены в файл:", file_path)
+                messagebox.showinfo("Успех", "Данные успешно сохранены в файл: " + file_path)
             except Exception as e:
-                print("Ошибка при сохранении данных:", str(e))
+                messagebox.showerror("Ошибка", f"Ошибка при сохранении данных: {str(e)}")
         else:
-            print('Ошибка при выполнении запроса:', response.status_code)
-
-    elif choice == "3":
-        break
-
+            messagebox.showinfo("Информация", "Операция отменена.")
     else:
-        print("Неверный выбор. Попробуйте снова.")
+        messagebox.showerror("Ошибка", f"Ошибка при выполнении запроса: {response.status_code}")
+
+def exit_program():
+    root.destroy()
+
+# Создание главного окна
+root = tk.Tk()
+root.title("Управление данными")
+
+# Создание виджетов
+label = tk.Label(root, text="Выберите действие:")
+label.pack()
+
+button1 = tk.Button(root, text="Получить все IP-адреса и сохранить в файл", command=get_all_ip_addresses)
+button1.pack()
+
+button2 = tk.Button(root, text="Получить даты в заданном временном промежутке и сохранить в файл", command=open_date_range_form)
+button2.pack()
+
+button3 = tk.Button(root, text="Выход", command=exit_program)
+button3.pack()
+
+# Запуск основного цикла обработки событий
+root.mainloop()
