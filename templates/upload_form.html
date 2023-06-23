@@ -2,11 +2,53 @@
 <html>
 <head>
   <title>Upload Log File</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: 300px;
+      padding: 5px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #555;
+    }
+  </style>
 </head>
 <body>
   <h1>Укажите путь до лог-файла</h1>
   <form action="/upload" method="POST">
-    <label for="log_path">Путь до файла: </label>
+    <label for="log_path">Путь до файла:</label>
     <input type="text" id="log_path" name="log_path" required>
     <br>
     <input type="submit" value="Загрузить">
