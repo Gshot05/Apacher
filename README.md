@@ -3,6 +3,7 @@
 
 
 Для начала нужно открыть Visual Stufio Code
+
 Затем откройте терминал, и пропишите команды для установки следующих библиотек:
 
 Pip install psycopg2(или psycopg2-binary, если MacOS)
